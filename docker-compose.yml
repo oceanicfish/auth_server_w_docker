@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  mysql-server:
+    build: ./mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: 07010020
+      MYSQL_USER: user1
+      MYSQL_PASSWORD: password1
+      MYSQL_DATABASE: mm2
+  auth-server:
+    image: maven:3.5.2-jdk-8-alpine
+    volumes:
+      - ./auth-server:/usr/auth-server
+    ports:
+      - 8087:8087
+    depends_on:
+      - mysql-server
+    working_dir: /usr/auth-server
+    command: mvn clean package
+    command: java -jar /usr/auth-server/target/auth-server-0.0.1-SNAPSHOT.jar
